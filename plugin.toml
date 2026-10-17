@@ -1,7 +1,7 @@
 schema = 1
 id = "opencode-notify"
-name = "opencode Notify Sounds"
+name = "Ding Notify Sounds"
 version = "0.1.0"
-description = "opencode's sound effects for agent turns, questions, failed and long commands, and pane alerts."
+description = "A ding when an agent turn, question, failed or long command, or pane alert needs your attention."
 icon = "bell"
 window = "window.luau"

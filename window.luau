@@ -1,7 +1,6 @@
 --!strict
--- Window half: plays one of opencode's sound effects when an agent finishes a
--- turn or needs you, a shell command fails, a long command ends, or a pane
--- raises an unseen alert.
+-- Window half: plays a ding when an agent finishes a turn or needs you, a shell
+-- command fails, a long command ends, or a pane raises an unseen alert.
 
 local DIR = tern.plugin.dir
 local DATA = tern.plugin.data
@@ -21,11 +20,11 @@ local DEFAULTS: { [string]: any } = {
 	only_unfocused = true,
 	min_seconds = 30,
 	sounds = {
-		done = "bip-bop-01",
-		question = "bip-bop-03",
-		error = "nope-03",
-		alert = "alert-01",
-		longrun = "yup-01",
+		done = "ding",
+		question = "ding",
+		error = "ding",
+		alert = "ding",
+		longrun = "ding",
 	},
 }
 
@@ -298,17 +297,19 @@ tern.command({
 	icon = "bell",
 	run = function(cx: WindowCx)
 		local played = 0
+		local heard: { [string]: boolean } = {}
 		for _, trigger in TRIGGERS do
 			local id = sound_id(trigger)
-			if id ~= nil then
+			if id ~= nil and heard[id] ~= true then
 				local path = SOUNDS .. "/" .. id .. ".wav"
 				if tern.fs.exists(path) then
+					heard[id] = true
 					enqueue(trigger, path)
 					played += 1
 				end
 			end
 		end
-		cx:toast("info", "Notify sounds", "playing " .. tostring(played) .. " sounds")
+		cx:toast("info", "Notify sounds", "playing " .. tostring(played) .. (if played == 1 then " sound" else " sounds"))
 	end,
 })
 
